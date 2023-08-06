@@ -29,17 +29,23 @@ class Snake (pygame.sprite.Sprite):
         self.screen_height = screen_height
 
         # Adjust for snake movement speed
-        self.speed = 1
+        self.speed = 20
 
-        # Initialize position
+        # Define initial position and direction
         self.x = x
         self.y = y
+        self.direction = (1, 0)
 
-    def move(self, dx: int, dy: int):
-        """Move the snake by dx and dy units in the current direction."""
-        self.x = (self.x + dx * self.speed) % self.screen_width
-        self.y = (self.y + dy * self.speed) % self.screen_height
+    def move(self):
+        """Move the snake by 1 unit in the current direction."""
+        self.x = (self.x + self.direction[0] * self.speed) % self.screen_width
+        self.y = (self.y + self.direction[1] * self.speed) % self.screen_height
 
+    def change_direction(self, dx, dy):
+        """Update direction of the snake"""
+        # only change if it is not a 180 degree turn
+        if dx != -self.direction[0] or dy != -self.direction[1]:
+            self.direction = (dx, dy)
 
     def update(self):
         """Update position of the snake"""

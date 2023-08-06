@@ -32,24 +32,30 @@ while run:
 
     key = pygame.key.get_pressed()
     if key[K_w]:
-        snake1.move(0, -1)
+        snake1.change_direction(0, -1)
     if key[K_s]:
-        snake1.move(0, 1)
+        snake1.change_direction(0, 1)
     if key[K_a]:
-        snake1.move(-1, 0)
+        snake1.change_direction(-1, 0)
     if key[K_d]:
-        snake1.move(1, 0)
+        snake1.change_direction(1, 0)
 
     if key[K_UP]:
-        snake2.move(0, -1)
+        snake2.change_direction(0, -1)
     if key[K_DOWN]:
-        snake2.move(0, 1)
+        snake2.change_direction(0, 1)
     if key[K_LEFT]:
-        snake2.move(-1, 0)
+        snake2.change_direction(-1, 0)
     if key[K_RIGHT]:
-        snake2.move(1, 0)
+        snake2.change_direction(1, 0)
 
-    screen.fill(bgColor)#
+    snake1.move()
+    snake2.move()
+
+    # Add a 0.1-second delay
+    pygame.time.delay(100)
+
+    screen.fill(bgColor)
 
     # Check for collision between snakes and food
     if snake1.check_collision(food):
