@@ -1,7 +1,7 @@
 import pygame
 
 class Snake (pygame.sprite.Sprite):
-    def __init__(self, color, size, x, y):
+    def __init__(self, color, size, x, y, screen_width, screen_height):
         """
         Initialize a new Snake instance.
 
@@ -25,6 +25,8 @@ class Snake (pygame.sprite.Sprite):
         self.image.fill(color)
         self.rect = self.image.get_rect()
         self.size = size
+        self.screen_width = screen_width
+        self.screen_height = screen_height
 
         # Adjust for snake movement speed
         self.speed = 1
@@ -35,8 +37,9 @@ class Snake (pygame.sprite.Sprite):
 
     def move(self, dx: int, dy: int):
         """Move the snake by dx and dy units in the current direction."""
-        self.x += dx * self.speed
-        self.y += dy * self.speed
+        self.x = (self.x + dx * self.speed) % self.screen_width
+        self.y = (self.y + dy * self.speed) % self.screen_height
+
 
     def update(self):
         """Update position of the snake"""

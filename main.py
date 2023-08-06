@@ -18,8 +18,8 @@ bgColor = (0, 0, 0)
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 #Initializing starting objects
-snake1 = Snake(RED, 20, 100, 100)
-snake2 = Snake(RED, 20, SCREEN_WIDTH - 100, SCREEN_HEIGHT - 100)
+snake1 = Snake(RED, 20, 100, 100, SCREEN_WIDTH, SCREEN_HEIGHT)
+snake2 = Snake(RED, 20, SCREEN_WIDTH - 100, SCREEN_HEIGHT - 100, SCREEN_WIDTH, SCREEN_HEIGHT)
 food = Food(YELLOW, 20, SCREEN_WIDTH, SCREEN_HEIGHT)
 
 all_sprites_list = pygame.sprite.Group()
