@@ -41,3 +41,7 @@ class Snake (pygame.sprite.Sprite):
     def update(self):
         """Update position of the snake"""
         self.rect.topleft = (self.x, self.y)
+
+    def check_collision(self, other_sprite):
+        """Check if the snake collides with another sprite (e.g., food)."""
+        return self.rect.colliderect(other_sprite.rect)

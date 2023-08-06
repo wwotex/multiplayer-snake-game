@@ -2,17 +2,7 @@ import pygame
 import random
 from pygame.locals import *
 from snake import Snake
-
-def spawn_food():
-    """
-    Spawns food at a random location on the screen. 
-    Returns Food rect.\n
-    Example:\n
-    food = spawn_food()
-    """
-    x = random.randint(0, SCREEN_WIDTH - 20)
-    y = random.randint(0, SCREEN_HEIGHT - 20)
-    return pygame.Rect(x, y, 20, 20)
+from food import Food
 
 pygame.init()
 
@@ -30,11 +20,10 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 #Initializing starting objects
 snake1 = Snake(RED, 20, 100, 100)
 snake2 = Snake(RED, 20, SCREEN_WIDTH - 100, SCREEN_HEIGHT - 100)
+food = Food(YELLOW, 20, SCREEN_WIDTH, SCREEN_HEIGHT)
 
 all_sprites_list = pygame.sprite.Group()
-all_sprites_list.add(snake1, snake2)
-
-food = spawn_food()
+all_sprites_list.add(snake1, snake2, food)
 
 run = True
 while run:        
@@ -61,12 +50,19 @@ while run:
     if key[K_RIGHT]:
         snake2.move(1, 0)
 
-    screen.fill(bgColor)  
+    screen.fill(bgColor)#
 
+    # Check for collision between snakes and food
+    if snake1.check_collision(food):
+        food.spawn()
+
+    if snake2.check_collision(food):
+        food.spawn()  
+
+    # Update sprites
     all_sprites_list.update()
-
     all_sprites_list.draw(screen)
-    pygame.draw.rect(screen, YELLOW, food)
+
     pygame.display.flip()
 
 pygame.quit()
