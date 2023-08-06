@@ -1,5 +1,6 @@
 import pygame
 from pygame.locals import *
+from keyboard import KeyboardController
 from snake import Snake
 from food import Food
 import colors
@@ -26,6 +27,7 @@ food = Food(colors.OLIVE, 20, SCREEN_WIDTH, SCREEN_HEIGHT)
 
 all_sprites_list = pygame.sprite.Group()
 all_sprites_list.add(snake1, snake2, food)
+controller = KeyboardController(snake1, snake2, food)
 
 # Initializing clock
 clock = pygame.time.Clock()
@@ -37,24 +39,7 @@ while run:
         if event.type == pygame.QUIT:
             run = False
 
-    key = pygame.key.get_pressed()
-    if key[K_w]:
-        snake1.change_direction(0, -1)
-    if key[K_s]:
-        snake1.change_direction(0, 1)
-    if key[K_a]:
-        snake1.change_direction(-1, 0)
-    if key[K_d]:
-        snake1.change_direction(1, 0)
-
-    if key[K_UP]:
-        snake2.change_direction(0, -1)
-    if key[K_DOWN]:
-        snake2.change_direction(0, 1)
-    if key[K_LEFT]:
-        snake2.change_direction(-1, 0)
-    if key[K_RIGHT]:
-        snake2.change_direction(1, 0)
+    controller.handleKeyPress()
 
     snake1.move()
     snake2.move()
