@@ -1,5 +1,4 @@
 import pygame
-import random
 from pygame.locals import *
 from snake import Snake
 from food import Food
