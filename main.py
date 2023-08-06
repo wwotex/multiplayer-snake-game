@@ -19,7 +19,7 @@ while run:
 
     key = pygame.key.get_pressed()
     if key[pygame.K_UP] == True:
-        snake1.move_ip(0, 1)
+        snake1.move_ip(0, -1)
     if key[pygame.K_DOWN] == True:
         snake1.move_ip(0, 1)
     if key[pygame.K_LEFT] == True:
