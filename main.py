@@ -58,9 +58,11 @@ while run:
 
     # Check for collision between snakes and food
     if snake1.check_collision(food):
+        snake1.grow()
         food.spawn()
 
     if snake2.check_collision(food):
+        snake2.grow()
         food.spawn()
 
 
