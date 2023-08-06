@@ -1,6 +1,8 @@
 import pygame
+import time
 
-class Snake (pygame.sprite.Sprite):
+
+class Snake(pygame.sprite.Sprite):
     def __init__(self, color, size, x, y, screen_width, screen_height):
         """
         Initialize a new Snake instance.
@@ -28,18 +30,25 @@ class Snake (pygame.sprite.Sprite):
         self.screen_width = screen_width
         self.screen_height = screen_height
 
-        # Adjust for snake movement speed
-        self.speed = 20
-
         # Define initial position and direction
         self.x = x
         self.y = y
         self.direction = (1, 0)
+        
+        self.time = time.time()
+
+        # snakes speed determined by the delay (and so its not dependent on FPS but is strictly attached to the grid)
+        self.movement_delay = 0.06
 
     def move(self):
         """Move the snake by 1 unit in the current direction."""
-        self.x = (self.x + self.direction[0] * self.speed) % self.screen_width
-        self.y = (self.y + self.direction[1] * self.speed) % self.screen_height
+        if time.time() <= self.time + self.movement_delay:
+            return
+        
+        self.x = (self.x + self.direction[0] * self.size) % self.screen_width
+        self.y = (self.y + self.direction[1] * self.size) % self.screen_height
+        
+        self.time = time.time()
 
     def change_direction(self, dx, dy):
         """Update direction of the snake"""
