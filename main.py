@@ -24,6 +24,10 @@ food = Food(YELLOW, 20, SCREEN_WIDTH, SCREEN_HEIGHT)
 all_sprites_list = pygame.sprite.Group()
 all_sprites_list.add(snake1, snake2, food)
 
+# Initializing clock
+clock = pygame.time.Clock()
+FPS = 10  # Adjust this value to control the game's frame rate
+
 run = True
 while run:        
     for event in pygame.event.get():
@@ -52,22 +56,24 @@ while run:
     snake1.move()
     snake2.move()
 
-    # Add a 0.1-second delay
-    pygame.time.delay(100)
-
-    screen.fill(bgColor)
-
     # Check for collision between snakes and food
     if snake1.check_collision(food):
         food.spawn()
 
     if snake2.check_collision(food):
-        food.spawn()  
+        food.spawn()
+
+
+    # Update screen
+    screen.fill(bgColor)
 
     # Update sprites
     all_sprites_list.update()
     all_sprites_list.draw(screen)
 
     pygame.display.flip()
+
+    # Control the frame rate
+    clock.tick(FPS)
 
 pygame.quit()
