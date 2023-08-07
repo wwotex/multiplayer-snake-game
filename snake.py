@@ -7,26 +7,10 @@ class SnakeSegment(pygame.sprite.Sprite):
         self.image.fill(color)
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
+        print("new segment created at" + str(self.rect.topleft))
 
 class Snake (pygame.sprite.Sprite):
     def __init__(self, color, size, x, y, screen_width, screen_height):
-        """
-        Initialize a new Snake instance.
-
-        Parameters:
-            color (tuple): RGB color value (e.g., (255, 0, 0) for red) representing the snake's appearance.
-            size (int): The size (width and height) of the snake's body segments in pixels.
-            x (int): The initial x-coordinate of the snake's position on the screen.
-            y (int): The initial y-coordinate of the snake's position on the screen.
-
-        Attributes:
-            image (pygame.Surface): The surface representing the appearance of the snake's body segments.
-            rect (pygame.Rect): The rectangular bounding box for the snake's current position on the screen.
-            size (int): The size (width and height) of the snake's body segments in pixels.
-            speed (int): The number of pixels the snake moves in each update, controlling its movement speed.
-            x (int): The current x-coordinate of the snake's position on the screen.
-            y (int): The current y-coordinate of the snake's position on the screen.
-        """
         super().__init__()
         self.color = color
         self.size = size
@@ -48,6 +32,8 @@ class Snake (pygame.sprite.Sprite):
     def move(self):
         """Move the snake by 1 unit in the current direction."""
         # Remove the last segment and insert at front as new head
+        print("Im moving in direction"+str(self.direction))
+        print(self.segments)
         dx, dy = self.direction
         new_head_x = (self.head.rect.x + dx * self.speed) % self.screen_width
         new_head_y = (self.head.rect.y + dy * self.speed) % self.screen_height
@@ -57,9 +43,7 @@ class Snake (pygame.sprite.Sprite):
         self.segments.add(new_segment)
         self.head = new_segment
 
-        # Remove last body segment
-        if len(self.segments) > 1:
-            self.segments.remove(self.segments.sprites()[0])
+        
 
     def grow(self):
         """Snake grows 1 body segment"""
@@ -70,6 +54,11 @@ class Snake (pygame.sprite.Sprite):
         new_segment = SnakeSegment(self.color, self.size, new_head_x, new_head_y)
         self.segments.add(new_segment)
         self.head = new_segment
+
+    def update(self, all_sprites_list):
+        """Update the snake sprite list"""
+        all_sprites_list
+        self.move()
 
     def change_direction(self, dx, dy):
         """Update direction of the snake"""

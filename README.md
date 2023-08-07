@@ -11,3 +11,5 @@ To do list:
 - [ ] self collision
 - [ ] enemy collision
 
+pygame.display.set_caption("Snake Game")
+

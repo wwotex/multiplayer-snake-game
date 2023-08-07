@@ -22,11 +22,11 @@ snake2 = Snake(RED, 20, SCREEN_WIDTH - 100, SCREEN_HEIGHT - 100, SCREEN_WIDTH, S
 food = Food(YELLOW, 20, SCREEN_WIDTH, SCREEN_HEIGHT)
 
 all_sprites_list = pygame.sprite.Group()
-all_sprites_list.add(snake1, snake2, food)
+all_sprites_list.add(snake1.segments, snake2.segments, food)
 
 # Initializing clock
 clock = pygame.time.Clock()
-FPS = 10  # Adjust this value to control the game's frame rate
+FPS = 1  # Adjust this value to control the game's frame rate
 
 run = True
 while run:        
@@ -70,6 +70,17 @@ while run:
     screen.fill(bgColor)
 
     # Update sprites
+    print(all_sprites_list)
+
+    # Assuming you have a subgroup named 'subgroup' within your all_sprites_list
+    subgroup_sprites = all_sprites_list.snake1.sprites()
+
+    for sprite in subgroup_sprites:
+        # Access and print information about each sprite
+        print(f"Sprite Position: ({sprite.rect.x}, {sprite.rect.y})")
+        # You can access other attributes of the sprite as needed
+
+
     all_sprites_list.update()
     all_sprites_list.draw(screen)
 
