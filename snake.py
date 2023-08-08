@@ -1,5 +1,8 @@
+from typing import Any, Iterable, Union
 import pygame
 import time
+
+from pygame.sprite import AbstractGroup
 
 
 class SnakeSegment(pygame.sprite.Sprite):
@@ -63,3 +66,19 @@ class SnakeSegment(pygame.sprite.Sprite):
     def check_collision(self, other_sprite):
         """Check if the snake collides with another sprite (e.g., food)."""
         return self.rect.colliderect(other_sprite.rect)
+
+
+class Snake(pygame.sprite.AbstractGroup):
+    def __init__(self) -> None:
+        super().__init__()
+        self.Q = []
+
+    def add(self, *sprites):
+        super().add(*sprites)
+        self.Q.append(*sprites)
+
+    def move(self):
+        segment = self.Q.pop(0)
+        segment.x = (self.Q[-1].x + segment.size) % segment.screen_width
+        self.Q.append(segment)
+    

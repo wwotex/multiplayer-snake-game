@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 from keyboard import KeyboardController
-from snake import SnakeSegment
+from snake import Snake, SnakeSegment
 from food import Food
 import colors
 
@@ -29,11 +29,10 @@ all_sprites_list = pygame.sprite.Group()
 all_sprites_list.add(snake1, snake2, food)
 controller = KeyboardController(snake1, snake2, food)
 
-snake_segments_list = []
+snake = Snake()
 for i in range(5):
     temp = SnakeSegment(colors.RED, 20, 10+20*i, 10, SCREEN_WIDTH, SCREEN_HEIGHT)
-    snake_segments_list.append(temp)
-    all_sprites_list.add(temp)
+    snake.add(temp)
 
 # Initializing clock
 clock = pygame.time.Clock()
@@ -47,13 +46,9 @@ while run:
 
     controller.handleKeyPress()
 
-    temp = SnakeSegment(colors.RED, 20, snake_segments_list[-1].x+snake_segments_list[-1].size, snake_segments_list[-1].y, SCREEN_WIDTH, SCREEN_HEIGHT)
-    snake_segments_list.append(temp)
-    temp2 = snake_segments_list.pop(0)
-    all_sprites_list.add(temp)
-    all_sprites_list.remove(temp2)
     snake1.move()
     snake2.move()
+    snake.move()
 
     # Check for collision between snakes and food
     if snake1.check_collision(food):
@@ -68,6 +63,8 @@ while run:
     # Update sprites
     all_sprites_list.update()
     all_sprites_list.draw(screen)
+    snake.update()
+    snake.draw(screen)
 
     pygame.display.flip()
 
