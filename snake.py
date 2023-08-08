@@ -2,7 +2,7 @@ import pygame
 import time
 
 
-class Snake(pygame.sprite.Sprite):
+class SnakeSegment(pygame.sprite.Sprite):
     def __init__(self, color, size, x, y, screen_width, screen_height):
         """
         Initialize a new Snake instance.
