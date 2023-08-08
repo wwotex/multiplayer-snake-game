@@ -3,10 +3,9 @@ from pygame.locals import *
 
 
 class KeyboardController:
-    def __init__(self, snake1, snake2, food) -> None:
+    def __init__(self, snake1, snake2) -> None:
         self.snake1 = snake1
         self.snake2 = snake2
-        self.food = food
 
     def handleKeyPress(self):
         key = pygame.key.get_pressed()

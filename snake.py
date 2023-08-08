@@ -3,40 +3,26 @@ import time
 
 
 class Snake(pygame.sprite.Sprite):
-    def __init__(self, color, size, x, y, screen_width, screen_height):
-        """
-        Initialize a new Snake instance.
-
-        Parameters:
-            color (tuple): RGB color value (e.g., (255, 0, 0) for red) representing the snake's appearance.
-            size (int): The size (width and height) of the snake's body segments in pixels.
-            x (int): The initial x-coordinate of the snake's position on the screen.
-            y (int): The initial y-coordinate of the snake's position on the screen.
-
-        Attributes:
-            image (pygame.Surface): The surface representing the appearance of the snake's body segments.
-            rect (pygame.Rect): The rectangular bounding box for the snake's current position on the screen.
-            size (int): The size (width and height) of the snake's body segments in pixels.
-            speed (int): The number of pixels the snake moves in each update, controlling its movement speed.
-            x (int): The current x-coordinate of the snake's position on the screen.
-            y (int): The current y-coordinate of the snake's position on the screen.
-        """
+    def __init__(self, color, size, x, y, SCREEN):
         super().__init__()
-
-        self.image = pygame.Surface([size, size])
-        self.image.fill(color)
-        self.rect = self.image.get_rect()
         self.size = size
-        self.screen_width = screen_width
-        self.screen_height = screen_height
+        self.color = color
+        self.screen_width = SCREEN.get_width()
+        self.screen_height = SCREEN.get_height()
+        self.screen = SCREEN
 
         # Define initial position and direction
         self.x = x
         self.y = y
         self.direction = (1, 0)
         
-        self.time = time.time()
+        # Body of the snake (3 body segments originally)
+        self.body = []
+        self.body.append((x - 2*self.direction[0], y - 2*self.direction[1])) 
+        self.body.append((x - self.direction[0], y - self.direction[1]))
+        self.body.append((x, y)) # head
 
+        self.time = time.time()
         # snakes speed determined by the delay (and so its not dependent on FPS but is strictly attached to the grid)
         self.movement_delay = 0.06
 
@@ -48,6 +34,9 @@ class Snake(pygame.sprite.Sprite):
         self.x = (self.x + self.direction[0] * self.size) % self.screen_width
         self.y = (self.y + self.direction[1] * self.size) % self.screen_height
         
+        self.body.append((self.x, self.y))
+        del self.body[0]
+
         self.time = time.time()
 
     def change_direction(self, dx, dy):
@@ -56,10 +45,14 @@ class Snake(pygame.sprite.Sprite):
         if dx != -self.direction[0] or dy != -self.direction[1]:
             self.direction = (dx, dy)
 
-    def update(self):
-        """Update position of the snake"""
-        self.rect.topleft = (self.x, self.y)
+    # def update(self):
+    #     """Update position of the snake"""
+    #     self.rect.topleft = (self.x, self.y)
 
     def check_collision(self, other_sprite):
         """Check if the snake collides with another sprite (e.g., food)."""
         return self.rect.colliderect(other_sprite.rect)
+    
+    def draw(self):
+        for snake_segment in self.body:
+            pygame.draw.rect(self.screen, self.color, [snake_segment[0], snake_segment[1], self.size, self.size])
