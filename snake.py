@@ -69,7 +69,7 @@ class Snake(pygame.sprite.AbstractGroup, ):
     #     segment.x = (self.Q[-1].x + segment.size) % segment.screen_width
     #     self.Q.append(segment)
 
-    def move(self, grow):
+    def move(self, food):
         """Move the snake by 1 unit in the current direction."""
         if time.time() <= self.time + self.movement_delay:
             return
@@ -80,9 +80,11 @@ class Snake(pygame.sprite.AbstractGroup, ):
         self.Q.append(segment)
         self.all_sprites_list.add(segment)
 
-        if grow == False:
+        if self.check_collision(food):
             segment = self.Q.pop(0)
             self.all_sprites_list.remove(segment)
+        else:
+            food.spawn()
 
         # segment.x = (self.x + self.direction[0] * self.size) % self.screen_width
         # segment.y = (self.y + self.direction[1] * self.size) % self.screen_height
@@ -93,4 +95,9 @@ class Snake(pygame.sprite.AbstractGroup, ):
         """Update direction of the snake"""
         # only change if it is not a 180 degree turn
         if dx != -self.direction[0] or dy != -self.direction[1]:
-            self.direction = (dx, dy)   
+            self.direction = (dx, dy)
+
+    def check_collision(self, other_sprite):
+        #head is self.Q[-1].rect
+        return not pygame.Rect.colliderect(self.Q[-1].rect,other_sprite.rect)
+        # idk why I had to negate it. I would expect the collide function to return true if they collide and false otherwise. And its code is doing union so this is how it should be. But somehow it is not.

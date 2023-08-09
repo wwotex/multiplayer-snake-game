@@ -49,8 +49,8 @@ while run:
 
     controller.handleKeyPress()
 
-    snake1.move(0)
-    snake2.move(0)
+    snake1.move(food)
+    snake2.move(food)
 
     # Check for collision between snakes and food
     # if snake1.check_collision(food):
