@@ -29,6 +29,7 @@ class Snake(pygame.sprite.AbstractGroup, ):
         self.direction = (1,0)
         self.screen = screen # width and height can be accessed using .get_width() and .get_height() functions
         self.all_sprites_list = all_sprites_list
+        self.alive = True
 
         # snakes speed determined by the delay (and so its not dependent on FPS but is strictly attached to the grid)
         self.movement_delay = 0.06
@@ -46,17 +47,24 @@ class Snake(pygame.sprite.AbstractGroup, ):
         if time.time() <= self.time + self.movement_delay:
             return
         
+        if not self.alive:
+            return
+        
         self.x = (self.x + self.direction[0] * self.size) % self.screen.get_width()
         self.y = (self.y + self.direction[1] * self.size) % self.screen.get_height()
         segment = SnakeSegment(self.color, self.size, self.x, self.y, self.screen)
         self.Q.append(segment)
         self.all_sprites_list.add(segment)
 
-        if self.check_collision(food):
+        # Check for food collision. If not true: delete last segment to maintain length. Otherwise keep it to increase length
+        if not self.check_collision(food):
             segment = self.Q.pop(0)
             self.all_sprites_list.remove(segment)
         else:
             food.spawn()
+
+        # check if snake collides with itself. If yes it died
+        self.self_collision()
       
         self.time = time.time()
 
@@ -68,5 +76,17 @@ class Snake(pygame.sprite.AbstractGroup, ):
 
     def check_collision(self, other_sprite):
         #head is self.Q[-1].rect
-        return not pygame.Rect.colliderect(self.Q[-1].rect,other_sprite.rect)
-        # idk why I had to negate it. I would expect the collide function to return true if they collide and false otherwise. And its code is doing union so this is how it should be. But somehow it is not.
+        return pygame.Rect.colliderect(self.Q[-1].rect,other_sprite.rect)
+        
+    def self_collision(self):
+        for segment in self.Q[:-1]:
+            if self.check_collision(segment):
+                print("You bit yourself. You died from poisoning")
+                # Delete the entire snake
+                self.alive = False
+                for _ in range(len(self.Q)):
+                    segment = self.Q.pop(0)
+                    self.all_sprites_list.remove(segment)
+                break
+
+

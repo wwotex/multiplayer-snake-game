@@ -8,6 +8,6 @@ To do list:
 - [x] screen edge logic
 - [x] time wise movement
 - [x] growing of the snake
-- [ ] self collision
+- [x] self collision
 - [ ] enemy collision
 
