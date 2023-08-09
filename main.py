@@ -10,8 +10,8 @@ pygame.init()
 # Initializing screen
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
-
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("Snake Game")
 
 # Initializing sprites group
 all_sprites_list = pygame.sprite.Group()
@@ -32,11 +32,6 @@ food = Food(colors.OLIVE, 20, screen)
 all_sprites_list.add(snake1, snake2, food)
 controller = KeyboardController(snake1, snake2, food)
 
-# snake = Snake()
-# for i in range(5):
-#     temp = SnakeSegment(colors.RED, 20, 10+20*i, 10, screen)
-#     snake.add(temp)
-
 # Initializing clock
 clock = pygame.time.Clock()
 FPS = 60  # Adjust this value to control the game's frame rate
@@ -51,13 +46,6 @@ while run:
 
     snake1.move(food)
     snake2.move(food)
-
-    # Check for collision between snakes and food
-    # if snake1.check_collision(food):
-    #     food.spawn()
-
-    # if snake2.check_collision(food):
-    #     food.spawn()
 
     # Update screen
     screen.fill(colors.DARK)
