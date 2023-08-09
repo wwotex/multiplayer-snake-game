@@ -9,5 +9,6 @@ To do list:
 - [x] time wise movement
 - [x] growing of the snake
 - [x] self collision
-- [ ] enemy collision
+- [x] enemy collision
+- [ ] Add visuals: keep track of score, announce winner etc.
 

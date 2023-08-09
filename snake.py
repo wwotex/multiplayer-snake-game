@@ -29,7 +29,6 @@ class Snake(pygame.sprite.AbstractGroup, ):
         self.direction = (1,0)
         self.screen = screen # width and height can be accessed using .get_width() and .get_height() functions
         self.all_sprites_list = all_sprites_list
-        self.alive = True
 
         # snakes speed determined by the delay (and so its not dependent on FPS but is strictly attached to the grid)
         self.movement_delay = 0.06
@@ -42,12 +41,12 @@ class Snake(pygame.sprite.AbstractGroup, ):
         super().add(*sprites)
         self.Q.append(*sprites)
 
-    def move(self, food):
+    def move(self, food: pygame.sprite.Sprite):
         """Move the snake by 1 unit in the current direction."""
         if time.time() <= self.time + self.movement_delay:
             return
         
-        if not self.alive:
+        if not self.Q:
             return
         
         self.x = (self.x + self.direction[0] * self.size) % self.screen.get_width()
@@ -68,25 +67,54 @@ class Snake(pygame.sprite.AbstractGroup, ):
       
         self.time = time.time()
 
-    def change_direction(self, dx, dy):
+    def change_direction(self, dx: int, dy: int):
         """Update direction of the snake"""
         # only change if it is not a 180 degree turn
         if dx != -self.direction[0] or dy != -self.direction[1]:
             self.direction = (dx, dy)
 
-    def check_collision(self, other_sprite):
+    def check_collision(self, other_sprite: pygame.sprite.Sprite):
+        # Check whether list is empty
+        if not self.Q:
+            return False
+        
         #head is self.Q[-1].rect
         return pygame.Rect.colliderect(self.Q[-1].rect,other_sprite.rect)
         
     def self_collision(self):
+        if not self.Q:
+            return
+        
         for segment in self.Q[:-1]:
             if self.check_collision(segment):
                 print("You bit yourself. You died from poisoning")
                 # Delete the entire snake
-                self.alive = False
                 for _ in range(len(self.Q)):
-                    segment = self.Q.pop(0)
-                    self.all_sprites_list.remove(segment)
-                break
+                    delete = self.Q.pop(0)
+                    self.all_sprites_list.remove(delete)
+                return
+
+    def enemy_collision(self, snake: 'Snake'):
+        if not (self.Q and snake.Q):
+            return
+        
+        # if the snakes collide head by head
+        if self.check_collision(snake.Q[-1]):
+            print("Yall made out. Cute but you poisoned each other and you're both dead #Romeo&Juliet")
+            self.delete_snake()
+            snake.delete_snake()
+
+        # Snake collided with a bodypart of the other snake
+        for segment in snake.Q:
+            if self.check_collision(segment):
+                print("You bumped into your mate. You died from embarassment.")
+                # Delete the entire snake
+                self.delete_snake()
+                return
+            
+    def delete_snake(self):
+        for _ in range(len(self.Q)):
+            delete = self.Q.pop(0)
+            self.all_sprites_list.remove(delete)
 
 

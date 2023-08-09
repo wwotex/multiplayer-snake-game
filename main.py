@@ -47,6 +47,10 @@ while run:
     snake1.move(food)
     snake2.move(food)
 
+    # Check if snake collided into the other
+    snake1.enemy_collision(snake2)
+    snake2.enemy_collision(snake1)
+
     # Update screen
     screen.fill(colors.DARK)
 
