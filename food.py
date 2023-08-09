@@ -2,7 +2,7 @@ import pygame
 import random
 
 class Food(pygame.sprite.Sprite):
-    def __init__(self, color, block_size, screen_width, screen_height):
+    def __init__(self, color, block_size, screen):
         super().__init__()
 
         self.image = pygame.Surface((block_size, block_size))
@@ -10,8 +10,8 @@ class Food(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
         self.block_size = block_size
-        self.screen_width = screen_width
-        self.screen_height = screen_height
+        self.screen_width = screen.get_width()
+        self.screen_height = screen.get_height()
 
         # Spawn the food at a random position
         self.spawn()
