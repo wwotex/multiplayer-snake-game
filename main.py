@@ -13,26 +13,29 @@ SCREEN_HEIGHT = 720
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
+# Initializing sprites group
+all_sprites_list = pygame.sprite.Group()
+
 # Initializing starting objects
-snake1 = SnakeSegment(colors.RED, 20, 100, 100, SCREEN_WIDTH, SCREEN_HEIGHT)
-snake2 = SnakeSegment(
+snake1 = Snake(colors.RED, 20, 100, 100, screen, all_sprites_list)
+snake2 = Snake(
     colors.PURPLE,
     20,
     SCREEN_WIDTH - 100,
     SCREEN_HEIGHT - 100,
-    SCREEN_WIDTH,
-    SCREEN_HEIGHT,
+    screen,
+    all_sprites_list
 )
-food = Food(colors.OLIVE, 20, SCREEN_WIDTH, SCREEN_HEIGHT)
+food = Food(colors.OLIVE, 20, screen)
 
-all_sprites_list = pygame.sprite.Group()
+# Adding them to sprites group and adding controls
 all_sprites_list.add(snake1, snake2, food)
 controller = KeyboardController(snake1, snake2, food)
 
-snake = Snake()
-for i in range(5):
-    temp = SnakeSegment(colors.RED, 20, 10+20*i, 10, SCREEN_WIDTH, SCREEN_HEIGHT)
-    snake.add(temp)
+# snake = Snake()
+# for i in range(5):
+#     temp = SnakeSegment(colors.RED, 20, 10+20*i, 10, screen)
+#     snake.add(temp)
 
 # Initializing clock
 clock = pygame.time.Clock()
@@ -46,16 +49,15 @@ while run:
 
     controller.handleKeyPress()
 
-    snake1.move()
-    snake2.move()
-    snake.move()
+    snake1.move(0)
+    snake2.move(0)
 
     # Check for collision between snakes and food
-    if snake1.check_collision(food):
-        food.spawn()
+    # if snake1.check_collision(food):
+    #     food.spawn()
 
-    if snake2.check_collision(food):
-        food.spawn()
+    # if snake2.check_collision(food):
+    #     food.spawn()
 
     # Update screen
     screen.fill(colors.DARK)
@@ -63,8 +65,6 @@ while run:
     # Update sprites
     all_sprites_list.update()
     all_sprites_list.draw(screen)
-    snake.update()
-    snake.draw(screen)
 
     pygame.display.flip()
 
