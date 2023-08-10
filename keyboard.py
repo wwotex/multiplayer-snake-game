@@ -3,10 +3,9 @@ from pygame.locals import *
 
 
 class KeyboardController:
-    def __init__(self, snake1, snake2, food) -> None:
+    def __init__(self, snake1, snake2) -> None:
         self.snake1 = snake1
         self.snake2 = snake2
-        self.food = food
 
     def handleKeyPress(self):
         key = pygame.key.get_pressed()
@@ -29,3 +28,15 @@ class KeyboardController:
             self.snake2.change_direction(-1, 0)
         if key[K_RIGHT]:
             self.snake2.change_direction(1, 0)
+
+        
+    def wait_for_space(self):
+        """Enters an infinite while loop until space key is pressed."""
+        while(True):
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    return
+
+            key = pygame.key.get_pressed()
+            if key[K_SPACE]:
+                return
