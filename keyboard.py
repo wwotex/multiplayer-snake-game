@@ -7,7 +7,8 @@ class KeyboardController:
         self.snake1 = snake1
         self.snake2 = snake2
 
-    def handleKeyPress(self):
+    def handleKeyPress(self) -> None:
+        """Handles keys for snakes"""
         key = pygame.key.get_pressed()
         # handle "wsad" keys for snake1
         if key[K_w]:
@@ -30,7 +31,7 @@ class KeyboardController:
             self.snake2.change_direction(1, 0)
 
         
-    def wait_for_space(self):
+    def wait_for_space(self) -> None:
         """Enters an infinite while loop until space key is pressed."""
         while(True):
             for event in pygame.event.get():

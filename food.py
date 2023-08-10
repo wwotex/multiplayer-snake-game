@@ -16,9 +16,7 @@ class Food(pygame.sprite.Sprite):
         # Spawn the food at a random position
         self.spawn()
 
-    def spawn(self):
-        """
-        Spawns the food at a random position on the screen.
-        """
+    def spawn(self) -> None:
+        """Spawns the food at a random position on the screen."""
         self.rect.x = random.randint(0, (self.screen_width - self.block_size) / self.block_size) * self.block_size
         self.rect.y = random.randint(0, (self.screen_height - self.block_size) / self.block_size) * self.block_size

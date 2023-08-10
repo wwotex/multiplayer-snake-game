@@ -39,20 +39,33 @@ class Screen:
         self.centered_message("Welcome to the ultimate snake game. Press space to play.", colors.MINT_CREAM)
         pygame.display.flip()
 
-    def render_game_screen(self, all_sprites_list, snake1, snake2):
+    def render_game_screen(self, controller, all_sprites_list: pygame.sprite.Group, snake1, snake2):
         """Renders the screen during game."""
-        self.screen.fill(colors.DARK)
+        
         # Both snakes died at the same time
         if not snake1.Q and not snake2.Q:
-            self.centered_message("Draw: You died at the same time.", colors.MINT_CREAM)
+            self.centered_message("Draw! Press space to restart.", colors.MINT_CREAM)
+            pygame.display.flip()
+            controller.wait_for_space()
+            snake1.reset(100, 100)
+            snake2.reset(self.width - 100, self.height - 100)
         # Player 1 died
         elif not snake1.Q and snake2.Q:       
-            self.centered_message("Player 2 wins!", colors.MINT_CREAM)
+            self.centered_message("Player 2 wins! Press space to restart.", colors.MINT_CREAM)
+            pygame.display.flip()
+            controller.wait_for_space()
+            snake1.reset(100, 100)
+            snake2.reset(self.width - 100, self.height - 100)
         #Player 2 died
         elif snake1.Q and not snake2.Q:
-            self.centered_message("Player 1 wins!", colors.MINT_CREAM)
+            self.centered_message("Player 1 wins! Press space to restart.", colors.MINT_CREAM)
+            pygame.display.flip()
+            controller.wait_for_space()
+            snake1.reset(100, 100)
+            snake2.reset(self.width - 100, self.height - 100)
         # No winner. Game continues. Update Sprites
         else:
+            self.screen.fill(colors.DARK)
             all_sprites_list.update()
             all_sprites_list.draw(self.screen)
 

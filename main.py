@@ -15,16 +15,16 @@ screen = Screen(1280,720)
 all_sprites_list = pygame.sprite.Group()
 
 # Initializing starting objects
-snake1 = Snake(colors.RED, 20, 100, 100, screen, all_sprites_list)
+snake1 = Snake(colors.RED, 20, 100, 100, screen.screen, all_sprites_list)
 snake2 = Snake(
     colors.PURPLE,
     20,
     screen.width - 100,
     screen.height - 100,
-    screen,
+    screen.screen,
     all_sprites_list
 )
-food = Food(colors.YELLOW, 20, screen)
+food = Food(colors.YELLOW, 20, screen.screen)
 
 # Adding them to sprites group and adding controls
 all_sprites_list.add(snake1, snake2, food)
@@ -54,7 +54,7 @@ while run:
     snake2.enemy_collision(snake1)
     
     # Update screen
-    screen.render_game_screen(all_sprites_list, snake1, snake2)
+    screen.render_game_screen(controller, all_sprites_list, snake1, snake2)
 
     # Control the frame rate
     clock.tick(FPS)
