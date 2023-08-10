@@ -10,5 +10,7 @@ To do list:
 - [x] growing of the snake
 - [x] self collision
 - [x] enemy collision
-- [ ] Add visuals: keep track of score, announce winner etc.
+- [x] Add visuals: keep track of score, announce winner etc.
+- [ ] Improve visuals
+- [ ] Add color selection screen at start
 
