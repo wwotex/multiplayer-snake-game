@@ -35,10 +35,10 @@ clock = pygame.time.Clock()
 FPS = 60  # Adjust this value to control the game's frame rate
 
 # Load initial screen and wait for space
-screen.starting_screen()
-controller.wait_for_space()
-
 run = True
+screen.starting_screen()
+run = controller.wait_for_space()
+
 while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

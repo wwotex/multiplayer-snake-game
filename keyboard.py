@@ -31,13 +31,13 @@ class KeyboardController:
             self.snake2.change_direction(1, 0)
 
         
-    def wait_for_space(self) -> None:
-        """Enters an infinite while loop until space key is pressed."""
+    def wait_for_space(self) -> bool:
+        """Enters an infinite while loop until space key is pressed. Returns False if player is trying to quit."""
         while(True):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    return
+                    return False
 
             key = pygame.key.get_pressed()
             if key[K_SPACE]:
-                return
+                return True
