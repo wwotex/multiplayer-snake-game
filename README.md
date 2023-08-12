@@ -7,9 +7,10 @@ To do list:
 - [x] respawn food randomly when "eaten"
 - [x] screen edge logic
 - [x] time wise movement
-- [ ] growing of the snake
-- [ ] self collision
-- [ ] enemy collision
-
-pygame.display.set_caption("Snake Game")
+- [x] growing of the snake
+- [x] self collision
+- [x] enemy collision
+- [x] Add visuals: keep track of score, announce winner etc.
+- [ ] Improve visuals
+- [ ] Add color selection screen at start
 

@@ -1,90 +1,60 @@
 import pygame
 from pygame.locals import *
-from snake import Snake
+from keyboard import KeyboardController
+from snake import Snake, SnakeSegment
 from food import Food
+from screen import Screen
+import colors
 
 pygame.init()
 
 # Initializing screen
-SCREEN_WIDTH = 1280
-SCREEN_HEIGHT = 720
+screen = Screen(1280,720)
 
-# Initializing colours
-RED = (255, 0, 0)
-PURPLE = (255, 0, 255)
-YELLOW = (255, 255, 0)
-bgColor = (0, 0, 0)
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-
-#Initializing starting objects
-snake1 = Snake(RED, 20, 100, 100, SCREEN_WIDTH, SCREEN_HEIGHT)
-snake2 = Snake(RED, 20, SCREEN_WIDTH - 100, SCREEN_HEIGHT - 100, SCREEN_WIDTH, SCREEN_HEIGHT)
-food = Food(YELLOW, 20, SCREEN_WIDTH, SCREEN_HEIGHT)
-
+# Initializing sprites group
 all_sprites_list = pygame.sprite.Group()
-all_sprites_list.add(snake1.segments, snake2.segments, food)
+
+# Initializing starting objects
+snake1 = Snake(colors.RED, 20, 100, 100, screen.screen, all_sprites_list)
+snake2 = Snake(
+    colors.PURPLE,
+    20,
+    screen.width - 100,
+    screen.height - 100,
+    screen.screen,
+    all_sprites_list
+)
+food = Food(colors.YELLOW, 20, screen.screen)
+
+# Adding them to sprites group and adding controls
+all_sprites_list.add(snake1, snake2, food)
+controller = KeyboardController(snake1, snake2)
 
 # Initializing clock
 clock = pygame.time.Clock()
-FPS = 1  # Adjust this value to control the game's frame rate
+FPS = 60  # Adjust this value to control the game's frame rate
 
+# Load initial screen and wait for space
 run = True
-while run:        
+screen.starting_screen()
+run = controller.wait_for_space()
+
+while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
 
-    key = pygame.key.get_pressed()
-    if key[K_w]:
-        snake1.change_direction(0, -1)
-    if key[K_s]:
-        snake1.change_direction(0, 1)
-    if key[K_a]:
-        snake1.change_direction(-1, 0)
-    if key[K_d]:
-        snake1.change_direction(1, 0)
+    controller.handleKeyPress()
 
-    if key[K_UP]:
-        snake2.change_direction(0, -1)
-    if key[K_DOWN]:
-        snake2.change_direction(0, 1)
-    if key[K_LEFT]:
-        snake2.change_direction(-1, 0)
-    if key[K_RIGHT]:
-        snake2.change_direction(1, 0)
+    snake1.move(food)
+    snake2.move(food)
 
-    snake1.move()
-    snake2.move()
-
-    # Check for collision between snakes and food
-    if snake1.check_collision(food):
-        snake1.grow()
-        food.spawn()
-
-    if snake2.check_collision(food):
-        snake2.grow()
-        food.spawn()
-
-
+    # Check if snake collided into the other
+    snake1.enemy_collision(snake2)
+    snake2.enemy_collision(snake1)
+    
     # Update screen
-    screen.fill(bgColor)
-
-    # Update sprites
-    print(all_sprites_list)
-
-    # Assuming you have a subgroup named 'subgroup' within your all_sprites_list
-    subgroup_sprites = all_sprites_list.snake1.sprites()
-
-    for sprite in subgroup_sprites:
-        # Access and print information about each sprite
-        print(f"Sprite Position: ({sprite.rect.x}, {sprite.rect.y})")
-        # You can access other attributes of the sprite as needed
-
-
-    all_sprites_list.update()
-    all_sprites_list.draw(screen)
-
-    pygame.display.flip()
+    screen.render_game_screen(controller, all_sprites_list, snake1, snake2)
 
     # Control the frame rate
     clock.tick(FPS)
