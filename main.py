@@ -28,21 +28,46 @@ food = Food(colors.YELLOW, 20, screen.screen)
 
 # Adding them to sprites group and adding controls
 all_sprites_list.add(snake1, snake2, food)
-controller = KeyboardController(snake1, snake2)
+controller = KeyboardController(2, snake1, snake2)
 
 # Initializing clock
 clock = pygame.time.Clock()
 FPS = 60  # Adjust this value to control the game's frame rate
 
-# Load initial screen and wait for space
-run = True
-screen.starting_screen()
-run = controller.wait_for_space()
+# Initiate variable that keeps track of game stages. -1 corresponds to quit
+game_stage = 0
 
-while run:
+# Load initial screen and wait for space
+while game_stage == 0:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            run = False
+            game_stage = -1
+
+    game_stage += controller.space_key()
+    screen.starting_screen()
+
+# butchered solution. To be solved later
+pygame.time.delay(500)
+
+# Select number of players
+while game_stage == 1:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            game_stage = -1
+
+    # handle input
+    controller.player_number += controller.left_right_selection()
+    pygame.time.delay(500) # bad solution. Fix later
+    game_stage += controller.space_key()
+
+    # render screen
+    screen.player_number_selection(controller.player_number)
+
+# Play the game
+while game_stage == 2:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            game_stage = -1
 
     controller.handleKeyPress()
 

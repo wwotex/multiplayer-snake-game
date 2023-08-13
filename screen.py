@@ -64,6 +64,12 @@ class Screen:
         self.multiline_centered_messages(("Welcome to the ultimate snake game.","Press space to play."), colors.MINT_CREAM)
         pygame.display.flip()
 
+    def player_number_selection(self, player_number):
+        """Takes number of players as input and presents it to the user."""
+        self.screen.fill(colors.DARK)
+        self.multiline_centered_messages(("Select the number of players using left and right!", str(player_number), "Press space to continue."), colors.MINT_CREAM)
+        pygame.display.flip()
+
     def render_game_screen(self, controller, all_sprites_list: pygame.sprite.Group, snake1, snake2):
         """Renders the screen during game."""
         if not (snake1.Q and snake2.Q): # Check for winner
@@ -79,7 +85,7 @@ class Screen:
         """Displays the round winner message on top of the current screen. Returns False if player is trying to quit"""
         # Both snakes died at the same time
         if not snake1.Q and not snake2.Q:
-            self.multiline_centered_messages(("Draw!", "Press space to restart."), colors.MINT_CREAM)
+            self.multiline_centered_messages(("Draw!", "Press space to continue."), colors.MINT_CREAM)
             pygame.display.flip()
             run = controller.wait_for_space()
             if not run:
@@ -90,7 +96,7 @@ class Screen:
         # Player 1 died
         elif not snake1.Q and snake2.Q:
             snake2.score += 1       
-            self.multiline_centered_messages(("Player 2 wins!", "Press space to restart."), colors.MINT_CREAM)
+            self.multiline_centered_messages(("Player 2 wins!", "Press space to continue."), colors.MINT_CREAM)
             pygame.display.flip()
             run = controller.wait_for_space()
             if not run:
@@ -101,7 +107,7 @@ class Screen:
         #Player 2 died
         elif snake1.Q and not snake2.Q:
             snake1.score += 1
-            self.multiline_centered_messages(("Player 1 wins!", "Press space to restart."), colors.MINT_CREAM)
+            self.multiline_centered_messages(("Player 1 wins!", "Press space to continue."), colors.MINT_CREAM)
             pygame.display.flip()
             run = controller.wait_for_space()
             if not run:
@@ -113,10 +119,9 @@ class Screen:
 
     def display_scores(self, controller, score1: int, score2: int) -> bool:
         """Displays scores on the screen"""
-        print("Im displaying scores")
         self.screen.fill(colors.DARK)
         self.multiline_centered_messages(("The current score is:", str(score1) + " : " + str(score2), "Press space to continue."), colors.MINT_CREAM)
         pygame.display.flip()
-        time.sleep(1)
+        time.sleep(0.5)
         run = controller.wait_for_space()
         return run
