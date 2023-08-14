@@ -5,6 +5,7 @@ from snake import Snake, SnakeSegment
 from food import Food
 from screen import Screen
 import colors
+import sys
 
 pygame.init()
 
@@ -39,26 +40,26 @@ game_stage = 0
 
 # Load initial screen and wait for space
 while game_stage == 0:
-    for event in pygame.event.get():
+    events = pygame.event.get()
+    for event in events:
         if event.type == pygame.QUIT:
-            game_stage = -1
+            pygame.quit()
+            sys.exit()
 
-    game_stage += controller.space_key()
+    game_stage += controller.space_key(events)
     screen.starting_screen()
-
-# butchered solution. To be solved later
-pygame.time.delay(500)
 
 # Select number of players
 while game_stage == 1:
-    for event in pygame.event.get():
+    events = pygame.event.get()
+    for event in events:
         if event.type == pygame.QUIT:
-            game_stage = -1
+            pygame.quit()
+            sys.exit()
 
     # handle input
-    controller.player_number += controller.left_right_selection()
-    pygame.time.delay(500) # bad solution. Fix later
-    game_stage += controller.space_key()
+    controller.player_number += controller.left_right_selection(events)
+    game_stage += controller.space_key(events)
 
     # render screen
     screen.player_number_selection(controller.player_number)
@@ -67,7 +68,8 @@ while game_stage == 1:
 while game_stage == 2:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            game_stage = -1
+            pygame.quit()
+            sys.exit()
 
     controller.handleKeyPress()
 
@@ -85,3 +87,4 @@ while game_stage == 2:
     clock.tick(FPS)
 
 pygame.quit()
+sys.exit()

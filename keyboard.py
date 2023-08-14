@@ -7,6 +7,20 @@ class KeyboardController:
         self.player_number = player_number
         self.snake1 = snake1
         self.snake2 = snake2
+        self.key_states = {} # dictionary to store key states
+
+    def update_key_states(self):
+        """Update key states based on events"""
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                self.key_states[event.key] = True
+            elif event.type == pygame.KEYUP:
+                self.key_states[event.key] = False
+
+    def is_key_released(self, key_code) -> bool:
+        """Check if a specific key was pressed before and is released now"""
+        if self.key_states[key_code]:
+            return self.key_states[key_code]
 
     def handleKeyPress(self) -> None:
         """Handles keys for snakes"""
@@ -31,23 +45,21 @@ class KeyboardController:
         if key[K_RIGHT]:
             self.snake2.change_direction(1, 0)
 
-    def space_key(self) -> int:
-        """Returns 1 if space key is pressed, 0 otherwise"""        
-        key = pygame.key.get_pressed()
-        if key[K_SPACE]:
-            return 1
-        else:
-            return 0
+    def space_key(self, events) -> int:
+        """Returns 1 if space key is released, 0 otherwise"""        
+        for event in events:            
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                return 1
+        return 0
             
-    def left_right_selection(self) -> int:
+    def left_right_selection(self, events) -> int:
         """Handles left right keys for selections. Returns default (0) / left (-1) / right (1)"""
-        key = pygame.key.get_pressed()
-        if key[K_a] or key[K_LEFT]:
-            return -1
-        elif key[K_w] or key[K_RIGHT]:
-            return 1
-        else:
-            return 0
+        for event in events:
+            if event.type == pygame.KEYUP and event.key == pygame.K_LEFT:
+                return -1
+            if event.type == pygame.KEYUP and event.key == pygame.K_RIGHT:
+                return 1
+        return 0
         
     def wait_for_space(self) -> bool:
         """Stops the game until the space key is pressed. Returns False if player is trying to quit."""
