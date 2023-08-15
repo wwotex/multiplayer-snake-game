@@ -75,6 +75,18 @@ class Snake(pygame.sprite.AbstractGroup):
         if dx != -self.direction[0] or dy != -self.direction[1]:
             self.direction = (dx, dy)
 
+    def turn_left(self) -> None:
+        """Update direction of the snake by making a 90 degree LEFT turn"""
+        dx = self.direction[1]
+        dy = -self.direction[0]
+        self.direction = (dx, dy)
+
+    def turn_right(self) -> None:
+        """Update direction of the snake by making a 90 degree RIGHT turn."""
+        dx = -self.direction[1]
+        dy = self.direction[0]
+        self.direction = (dx, dy)
+
     def check_collision(self, other_sprite: pygame.sprite.Sprite)  -> None:
         """Checks collision between snake head and passed sprite"""
         # Check whether list is empty

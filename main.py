@@ -66,12 +66,15 @@ while game_stage == 1:
 
 # Play the game
 while game_stage == 2:
-    for event in pygame.event.get():
+    events = pygame.event.get()
+
+    for event in events:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
 
-    controller.handleKeyPress()
+    # controller.snake_direction_old()
+    controller.snake_direction_new(events)
 
     snake1.move(food)
     snake2.move(food)

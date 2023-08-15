@@ -7,22 +7,8 @@ class KeyboardController:
         self.player_number = player_number
         self.snake1 = snake1
         self.snake2 = snake2
-        self.key_states = {} # dictionary to store key states
 
-    def update_key_states(self):
-        """Update key states based on events"""
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                self.key_states[event.key] = True
-            elif event.type == pygame.KEYUP:
-                self.key_states[event.key] = False
-
-    def is_key_released(self, key_code) -> bool:
-        """Check if a specific key was pressed before and is released now"""
-        if self.key_states[key_code]:
-            return self.key_states[key_code]
-
-    def handleKeyPress(self) -> None:
+    def snake_direction_old(self) -> None:
         """Handles keys for snakes"""
         key = pygame.key.get_pressed()
         # handle "wsad" keys for snake1
@@ -45,6 +31,20 @@ class KeyboardController:
         if key[K_RIGHT]:
             self.snake2.change_direction(1, 0)
 
+    def snake_direction_new(self, events) -> None:
+        """Changes snake directions using 2 keys only. Better for multiplayer support"""
+        for event in events:         
+            # Snake 1 direction   
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_a:
+                self.snake1.turn_left()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_d:
+                self.snake1.turn_right()
+            #Snake 2 direction
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
+                self.snake2.turn_left()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
+                self.snake2.turn_right()
+        
     def space_key(self, events) -> int:
         """Returns 1 if space key is released, 0 otherwise"""        
         for event in events:            
