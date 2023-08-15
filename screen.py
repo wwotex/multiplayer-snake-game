@@ -8,7 +8,7 @@ class Screen:
         self.width = width
         self.height = height
         self.screen = pygame.display.set_mode((width, height))
-        pygame.display.set_caption("Snake Game")
+        pygame.display.set_caption("Multiplayer Snake Game")
         self.font_style = pygame.font.SysFont(None, 30)
 
     def get_width(self):
@@ -70,10 +70,10 @@ class Screen:
         self.multiline_centered_messages(("Select the number of players using left and right!", str(player_number), "Press space to continue."), colors.MINT_CREAM)
         pygame.display.flip()
 
-    def render_game_screen(self, controller, all_sprites_list: pygame.sprite.Group, snake1, snake2):
+    def render_game_screen(self, controller, all_sprites_list: pygame.sprite.Group, snakes):
         """Renders the screen during game."""
-        if not (snake1.Q and snake2.Q): # Check for winner
-            self.winner_message(controller, snake1, snake2)
+        if not (snakes[0].Q and snakes[1].Q): # Check for winner
+            self.winner_message(controller, snakes)
         else: # No winner. Game continues. Update Sprites
             self.screen.fill(colors.DARK)
             all_sprites_list.update()
@@ -81,40 +81,40 @@ class Screen:
 
         pygame.display.flip()
 
-    def winner_message(self, controller, snake1, snake2) -> bool:
+    def winner_message(self, controller, snakes) -> bool:
         """Displays the round winner message on top of the current screen. Returns False if player is trying to quit"""
         # Both snakes died at the same time
-        if not snake1.Q and not snake2.Q:
+        if not snakes[0].Q and not snakes[1].Q:
             self.multiline_centered_messages(("Draw!", "Press space to continue."), colors.MINT_CREAM)
             pygame.display.flip()
             run = controller.wait_for_space()
             if not run:
                 return False
-            self.display_scores(controller, snake1.score,snake2.score)
-            snake1.reset(100, 100)
-            snake2.reset(self.width - 100, self.height - 100)
+            self.display_scores(controller, snakes[0].score,snakes[1].score)
+            snakes[0].reset(100, 100)
+            snakes[1].reset(self.width - 100, self.height - 100)
         # Player 1 died
-        elif not snake1.Q and snake2.Q:
-            snake2.score += 1       
+        elif not snakes[0].Q and snakes[1].Q:
+            snakes[1].score += 1       
             self.multiline_centered_messages(("Player 2 wins!", "Press space to continue."), colors.MINT_CREAM)
             pygame.display.flip()
             run = controller.wait_for_space()
             if not run:
                 return False
-            self.display_scores(controller, snake1.score,snake2.score)
-            snake1.reset(100, 100)
-            snake2.reset(self.width - 100, self.height - 100)
+            self.display_scores(controller, snakes[0].score,snakes[1].score)
+            snakes[0].reset(100, 100)
+            snakes[1].reset(self.width - 100, self.height - 100)
         #Player 2 died
-        elif snake1.Q and not snake2.Q:
-            snake1.score += 1
+        elif snakes[0].Q and not snakes[1].Q:
+            snakes[0].score += 1
             self.multiline_centered_messages(("Player 1 wins!", "Press space to continue."), colors.MINT_CREAM)
             pygame.display.flip()
             run = controller.wait_for_space()
             if not run:
                 return False
-            self.display_scores(controller, snake1.score,snake2.score)
-            snake1.reset(100, 100)
-            snake2.reset(self.width - 100, self.height - 100)
+            self.display_scores(controller, snakes[0].score,snakes[1].score)
+            snakes[0].reset(100, 100)
+            snakes[1].reset(self.width - 100, self.height - 100)
         return True
 
     def display_scores(self, controller, score1: int, score2: int) -> bool:

@@ -3,10 +3,9 @@ from pygame.locals import *
 
 
 class KeyboardController:
-    def __init__(self, player_number, snake1, snake2) -> None:
+    def __init__(self, player_number, snakes) -> None:
         self.player_number = player_number
-        self.snake1 = snake1
-        self.snake2 = snake2
+        self.snakes = snakes
 
     def snake_direction_old(self) -> None:
         """Handles keys for snakes"""
@@ -36,14 +35,14 @@ class KeyboardController:
         for event in events:         
             # Snake 1 direction   
             if event.type == pygame.KEYDOWN and event.key == pygame.K_a:
-                self.snake1.turn_left()
+                self.snakes[0].turn_left()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_d:
-                self.snake1.turn_right()
+                self.snakes[0].turn_right()
             #Snake 2 direction
             if event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
-                self.snake2.turn_left()
+                self.snakes[1].turn_left()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
-                self.snake2.turn_right()
+                self.snakes[1].turn_right()
         
     def space_key(self, events) -> int:
         """Returns 1 if space key is released, 0 otherwise"""        
