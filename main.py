@@ -16,9 +16,10 @@ screen = Screen(1280,720)
 all_sprites_list = pygame.sprite.Group()
 
 # Initializing starting objects
-snake1 = Snake(colors.RED, 20, 100, 100, screen.screen, all_sprites_list)
-snake2 = Snake(colors.PURPLE, 20, screen.width - 100, screen.height - 100, screen.screen, all_sprites_list)
 food = Food(colors.YELLOW, 20, screen.screen)
+snake1 = Snake(colors.RED, 20, screen.screen, all_sprites_list)
+snake2 = Snake(colors.PURPLE, 20, screen.screen, all_sprites_list)
+
 
 snakes = [snake1, snake2]
 
@@ -74,12 +75,14 @@ while game_stage == 2:
     # controller.snake_direction_old()
     controller.snake_direction_new(events)
 
-    snake1.move(food)
-    snake2.move(food)
+    for snake in snakes:
+        snake.move(food)
 
     # Check if snake collided into the other
-    snake1.enemy_collision(snake2)
-    snake2.enemy_collision(snake1)
+    for i, snake in enumerate(snakes):
+        for j, other_snake in enumerate(snakes):
+            if i != j:
+                snake.enemy_collision(other_snake)
     
     # Update screen
     screen.render_game_screen(controller, all_sprites_list, snakes)

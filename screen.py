@@ -90,9 +90,9 @@ class Screen:
             run = controller.wait_for_space()
             if not run:
                 return False
-            self.display_scores(controller, snakes[0].score,snakes[1].score)
-            snakes[0].reset(100, 100)
-            snakes[1].reset(self.width - 100, self.height - 100)
+            self.display_scores(controller, snakes)
+            for snake in snakes:
+                snake.reset()
         # Player 1 died
         elif not snakes[0].Q and snakes[1].Q:
             snakes[1].score += 1       
@@ -101,9 +101,9 @@ class Screen:
             run = controller.wait_for_space()
             if not run:
                 return False
-            self.display_scores(controller, snakes[0].score,snakes[1].score)
-            snakes[0].reset(100, 100)
-            snakes[1].reset(self.width - 100, self.height - 100)
+            self.display_scores(controller, snakes)
+            for snake in snakes:
+                snake.reset()
         #Player 2 died
         elif snakes[0].Q and not snakes[1].Q:
             snakes[0].score += 1
@@ -112,15 +112,15 @@ class Screen:
             run = controller.wait_for_space()
             if not run:
                 return False
-            self.display_scores(controller, snakes[0].score,snakes[1].score)
-            snakes[0].reset(100, 100)
-            snakes[1].reset(self.width - 100, self.height - 100)
+            self.display_scores(controller, snakes)
+            for snake in snakes:
+                snake.reset()
         return True
 
-    def display_scores(self, controller, score1: int, score2: int) -> bool:
+    def display_scores(self, controller, snakes) -> bool:
         """Displays scores on the screen"""
         self.screen.fill(colors.DARK)
-        self.multiline_centered_messages(("The current score is:", str(score1) + " : " + str(score2), "Press space to continue."), colors.MINT_CREAM)
+        self.multiline_centered_messages(("The current score is:", str(snakes[0].score) + " : " + str(snakes[1].score), "Press space to continue."), colors.MINT_CREAM)
         pygame.display.flip()
         time.sleep(0.5)
         run = controller.wait_for_space()

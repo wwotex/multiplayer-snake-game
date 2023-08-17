@@ -1,42 +1,39 @@
 from typing import Any, Iterable, Union
 import pygame
 import time
+import random
 from pygame.sprite import AbstractGroup
 
 class SnakeSegment(pygame.sprite.Sprite):
-    def __init__(self, color, size, x, y, screen):
+    def __init__(self, color, size, x, y):
         super().__init__()
 
         self.image = pygame.Surface([size, size])
         self.image.fill(color)
         self.rect = self.image.get_rect()
         self.size = size
-        self.screen_width = screen.get_width()
-        self.screen_height = screen.get_height()
 
         # Define initial position
         self.rect.x = x
         self.rect.y = y
 
 class Snake(pygame.sprite.AbstractGroup):
-    def __init__(self, color, size, x, y, screen, all_sprites_list) -> None:
+    def __init__(self, color, block_size, screen, all_sprites_list) -> None:
         super().__init__()
         self.Q = []
         self.color = color
-        self.size = size
-        self.x = x # keeps track of the head x coordinate
-        self.y = y # keeps track of the head y coordinate
-        self.direction = (1,0)
+        self.block_size = block_size
         self.screen = screen # width and height can be accessed using .get_width() and .get_height() functions
         self.all_sprites_list = all_sprites_list
-        self.score = 0
-
-        # snakes speed determined by the delay (and so its not dependent on FPS but is strictly attached to the grid)
-        self.movement_delay = 0.06
+        self.movement_delay = 0.06 # snakes speed determined by the delay (and so its not dependent on FPS but is strictly attached to the grid)
         self.time = time.time()
+        self.score = 0
+        self.x = random.randint(0, (self.screen.get_width() - self.block_size) / self.block_size) * self.block_size
+        self.y = random.randint(0, (self.screen.get_height() - self.block_size) / self.block_size) * self.block_size
+        self.direction = (1,0)
 
         # Initial body of the snake
-        self.add(SnakeSegment(color, 20, x, y, screen))
+        self.add(SnakeSegment(color, 20, self.x, self.y))
 
     def add(self, *sprites) -> None:
         """Adds sprites to the AbstractSpriteGroup and to the Q snake body segment list"""
@@ -51,9 +48,9 @@ class Snake(pygame.sprite.AbstractGroup):
         if not self.Q:
             return
         
-        self.x = (self.x + self.direction[0] * self.size) % self.screen.get_width()
-        self.y = (self.y + self.direction[1] * self.size) % self.screen.get_height()
-        segment = SnakeSegment(self.color, self.size, self.x, self.y, self.screen)
+        self.x = (self.x + self.direction[0] * self.block_size) % self.screen.get_width()
+        self.y = (self.y + self.direction[1] * self.block_size) % self.screen.get_height()
+        segment = SnakeSegment(self.color, self.block_size, self.x, self.y)
         self.Q.append(segment)
         self.all_sprites_list.add(segment)
 
@@ -135,17 +132,17 @@ class Snake(pygame.sprite.AbstractGroup):
             delete = self.Q.pop(0)
             self.all_sprites_list.remove(delete)
 
-    def reset(self,x:int,y:int) -> None:
+    def reset(self) -> None:
         """Resets Snake at specified coordinates"""
         # make sure snake is deleted
         self.delete_snake()
-        self.x = x # reset x coordinate
-        self.y = y # reset y coordinate
+        self.x = random.randint(0, (self.screen.get_width() - self.block_size) / self.block_size) * self.block_size
+        self.y = random.randint(0, (self.screen.get_height() - self.block_size) / self.block_size) * self.block_size
         self.direction = (1,0) # reset direction
         self.time = time.time()
 
         # reset body of the snake
         # self.Q = [] # delete body
-        new_head = SnakeSegment(self.color, 20, x, y, self.screen)
+        new_head = SnakeSegment(self.color, 20, self.x, self.y)
         self.add(new_head)
         self.all_sprites_list.add(new_head)
