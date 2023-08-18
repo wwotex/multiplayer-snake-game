@@ -16,19 +16,11 @@ screen = Screen(1280,720)
 all_sprites_list = pygame.sprite.Group()
 
 # Initializing starting objects
+snakes = [] # Snake list to keep track of existing snakes
 food = Food(colors.YELLOW, 20, screen.screen)
-snake1 = Snake(colors.RED, 20, screen.screen, all_sprites_list)
-snake2 = Snake(colors.PURPLE, 20, screen.screen, all_sprites_list)
-
-
-snakes = [snake1, snake2]
-
-# Adding them to sprites group and adding controls
 all_sprites_list.add(food)
-for snake in snakes:
-    all_sprites_list.add(snake)
 
-controller = KeyboardController(2, snakes)
+controller = KeyboardController()
 
 # Initializing clock
 clock = pygame.time.Clock()
@@ -36,6 +28,9 @@ FPS = 60  # Adjust this value to control the game's frame rate
 
 # Initiate variable that keeps track of game stages. -1 corresponds to quit
 game_stage = 0
+
+player_number = 2 # initial player number
+
 
 # Load initial screen and wait for space
 while game_stage == 0:
@@ -57,11 +52,18 @@ while game_stage == 1:
             sys.exit()
 
     # handle input
-    controller.player_number += controller.left_right_selection(events)
+    player_number += controller.left_right_selection(events)
     game_stage += controller.space_key(events)
 
+    if game_stage == 2:
+        # Playernumber is confirmed. Initialize snakes.
+        for _ in range(player_number):
+            new_snake = Snake(colors.RED, 20, screen.screen, all_sprites_list)  # Adjust parameters as needed
+            snakes.append(new_snake)
+            all_sprites_list.add(new_snake)
+
     # render screen
-    screen.player_number_selection(controller.player_number)
+    screen.player_number_selection(player_number)
 
 # Play the game
 while game_stage == 2:
@@ -72,14 +74,19 @@ while game_stage == 2:
             pygame.quit()
             sys.exit()
 
+    # Adjust snake directions according to input
     # controller.snake_direction_old()
-    controller.snake_direction_new(events)
+    controller.snake_direction_new(snakes, events)
 
+    # All snakes take a move
     for snake in snakes:
         snake.move(food)
 
-    # Check if snake collided into the other
+    # Check collisions
     for i, snake in enumerate(snakes):
+        # Check self collision
+        snake.self_collision()
+        # Check enemy collisions
         for j, other_snake in enumerate(snakes):
             if i != j:
                 snake.enemy_collision(other_snake)

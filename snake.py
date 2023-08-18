@@ -42,11 +42,14 @@ class Snake(pygame.sprite.AbstractGroup):
 
     def move(self, food: pygame.sprite.Sprite) -> None:
         """Move the snake by 1 unit in the current direction."""
-        if time.time() <= self.time + self.movement_delay:
-            return
-        
         if not self.Q:
             return
+        
+        # Only move if the movement delay time has been reached.
+        if time.time() <= self.time + self.movement_delay:
+            return
+        else:
+            self.time = time.time()
         
         self.x = (self.x + self.direction[0] * self.block_size) % self.screen.get_width()
         self.y = (self.y + self.direction[1] * self.block_size) % self.screen.get_height()
@@ -59,12 +62,7 @@ class Snake(pygame.sprite.AbstractGroup):
             segment = self.Q.pop(0)
             self.all_sprites_list.remove(segment)
         else:
-            food.spawn()
-
-        # check if snake collides with itself. If yes it died
-        self.self_collision()
-      
-        self.time = time.time()
+            food.spawn()      
 
     def change_direction(self, dx: int, dy: int) -> None:
         """Update direction of the snake"""
@@ -124,7 +122,6 @@ class Snake(pygame.sprite.AbstractGroup):
                 print("You bumped into your mate. You died from embarassment.")
                 # Delete the entire snake
                 self.delete_snake()
-                return
             
     def delete_snake(self) -> None:
         """Deletes all body segments of the snake"""
@@ -133,7 +130,7 @@ class Snake(pygame.sprite.AbstractGroup):
             self.all_sprites_list.remove(delete)
 
     def reset(self) -> None:
-        """Resets Snake at specified coordinates"""
+        """Resets Snake at random coordinates"""
         # make sure snake is deleted
         self.delete_snake()
         self.x = random.randint(0, (self.screen.get_width() - self.block_size) / self.block_size) * self.block_size
