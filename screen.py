@@ -70,14 +70,11 @@ class Screen:
         self.multiline_centered_messages(("Select the number of players using left and right!", str(player_number), "Press space to continue."), colors.MINT_CREAM)
         pygame.display.flip()
 
-    def render_game_screen(self, controller, all_sprites_list: pygame.sprite.Group, snakes):
+    def render_game_screen(self, all_sprites_list: pygame.sprite.Group):
         """Renders the screen during game."""
-        if not (snakes[0].Q and snakes[1].Q): # Check for winner
-            self.winner_message(controller, snakes)
-        else: # No winner. Game continues. Update Sprites
-            self.screen.fill(colors.DARK)
-            all_sprites_list.update()
-            all_sprites_list.draw(self.screen)
+        self.screen.fill(colors.DARK)
+        all_sprites_list.update()
+        all_sprites_list.draw(self.screen)
 
         pygame.display.flip()
 
@@ -117,11 +114,12 @@ class Screen:
                 snake.reset()
         return True
 
-    def display_scores(self, controller, snakes) -> bool:
+    def display_scores(self, snakes):
         """Displays scores on the screen"""
         self.screen.fill(colors.DARK)
-        self.multiline_centered_messages(("The current score is:", str(snakes[0].score) + " : " + str(snakes[1].score), "Press space to continue."), colors.MINT_CREAM)
+        
+        scores_list = [f"Player {i + 1} score: {snake.score}" for i, snake in enumerate(snakes)]
+        scores_list.append("Press space to continue.")
+        
+        self.multiline_centered_messages(scores_list, colors.MINT_CREAM)
         pygame.display.flip()
-        time.sleep(0.5)
-        run = controller.wait_for_space()
-        return run
