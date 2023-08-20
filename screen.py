@@ -119,6 +119,7 @@ class Screen:
         self.screen.fill(colors.DARK)
         
         scores_list = [f"Player {i + 1} score: {snake.score}" for i, snake in enumerate(snakes)]
+        scores_list.append("")
         scores_list.append("Press space to continue.")
         
         self.multiline_centered_messages(scores_list, colors.MINT_CREAM)

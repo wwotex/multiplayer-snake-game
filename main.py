@@ -32,27 +32,24 @@ game_stage = 0
 player_number = active_snakes = 2 # initial player number
 
 while True:
-    # Load initial screen and wait for space
-    if game_stage == 0:
-        events = pygame.event.get()
-        for event in events:
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+    # handle quit event
+    events = pygame.event.get()
+    for event in events:
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
 
+    ################################## Load initial screen and wait for space ##################################
+    if game_stage == 0:
         game_stage += controller.space_key(events)
         screen.starting_screen()
 
-    # Select number of players
+    ######################################### Select number of players #########################################
     elif game_stage == 1:
-        events = pygame.event.get()
-        for event in events:
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
-        # handle input
-        player_number += controller.left_right_selection(events)
+        # change player number based on input
+        new_player_number = player_number + controller.left_right_selection(events)
+        if 2 <= new_player_number and new_player_number <= 8:
+            player_number = new_player_number
 
         if controller.space_key(events) == 1:
             # Playernumber is confirmed. Initialize snakes.
@@ -69,15 +66,8 @@ while True:
             # render screen
             screen.player_number_selection(player_number)
 
-    # Play the game
+    ############################################### Play the game ###############################################
     elif game_stage == 2:
-        events = pygame.event.get()
-
-        for event in events:
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
         if active_snakes < 2:
             for snake in snakes:
                 if snake.Q:
@@ -86,9 +76,7 @@ while True:
         else:
             # Adjust snake directions according to input
             # controller.snake_direction_old()
-            controller.snake_direction_new(snakes, events)
-
-            print(active_snakes)
+            controller.snake_direction_new(snakes, events, player_number)
 
             # All snakes take a move
             for snake in snakes:
@@ -120,15 +108,8 @@ while True:
             # Control the frame rate
             clock.tick(FPS)
 
-    # Display scores
+    ############################################## Display scores ##############################################
     elif game_stage == 3:
-        events = pygame.event.get()
-
-        for event in events:
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
         # Transfer round scores to overall scores:
         for snake in snakes:
             if snake.round_score != 0:
@@ -139,7 +120,6 @@ while True:
 
         # Go back to previous game stage
         if controller.space_key(events) == 1:
-            print("lets go back to game stage")
             active_snakes = player_number
             for snake in snakes:
                 snake.reset()
